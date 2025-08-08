@@ -1,577 +1,635 @@
 <!DOCTYPE html>
 <html lang="bn">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>শুভ জন্মদিন আলপনা!</title>
-    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;700&family=Satisfy&family=Kaushan+Script&display=swap" rel="stylesheet">
-    <style>
-        /* বেসিক রিসেট */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            user-select: none;
-            -webkit-tap-highlight-color: transparent;
-        }
-        
-        body {
-            font-family: 'Hind Siliguri', sans-serif;
-            overflow-x: hidden;
-            height: 100vh;
-            width: 100vw;
-            touch-action: pan-y;
-            background: #f5f5f5;
-        }
-        
-        /* পেজ কন্টেইনার */
-        .page-container {
-            position: relative;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        
-        /* প্রতিটি পেজ */
-        .page {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55), opacity 0.8s;
-            background-size: cover;
-            background-position: center;
-            transform: translateX(100%);
-            opacity: 0;
-            z-index: 1;
-        }
-        
-        /* অ্যাক্টিভ পেজ */
-        .page.active {
-            transform: translateX(0);
-            opacity: 1;
-            z-index: 2;
-        }
-        
-        /* টেক্সট স্টাইল */
-        .message {
-            font-size: clamp(1.2rem, 3vw, 1.5rem);
-            margin: 15px 0;
-            color: #333;
-            line-height: 1.6;
-            max-width: 90%;
-            padding: 0 10px;
-        }
-        
-        /* GIF স্টিকার */
-        .sticker {
-            width: clamp(120px, 30vw, 180px);
-            height: clamp(120px, 30vw, 180px);
-            margin: 10px 0;
-            object-fit: contain;
-            filter: drop-shadow(0 5px 15px rgba(0,0,0,0.1));
-        }
-        
-        /* নেভিগেশন বাটন */
-        .nav-btn {
-            padding: clamp(10px, 3vw, 12px) clamp(20px, 5vw, 30px);
-            background: linear-gradient(45deg, #ff6b81, #ff8e53);
-            color: white;
-            border: none;
-            border-radius: 50px;
-            font-size: clamp(0.9rem, 3vw, 1rem);
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(255, 107, 129, 0.3);
-            transition: all 0.3s;
-            z-index: 10;
-            font-weight: bold;
-            margin: 5px;
-            min-width: 120px;
-        }
-        
-        .nav-btn:active {
-            transform: translateY(2px);
-        }
-        
-        /* বাটন কন্টেইনার */
-        .btn-container {
-            display: flex;
-            gap: 10px;
-            position: absolute;
-            bottom: 20px;
-            flex-wrap: wrap;
-            justify-content: center;
-            width: 100%;
-            padding: 0 20px;
-        }
-        
-        /* হেডিং স্টাইল */
-        h1 {
-            font-family: 'Kaushan Script', cursive;
-            font-size: clamp(2rem, 6vw, 2.8rem);
-            color: #ff6b81;
-            margin-bottom: 15px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-            padding: 0 10px;
-        }
-        
-        /* টাইপিং এফেক্ট */
-        .typing {
-            display: inline-block;
-        }
-        
-        .typing::after {
-            content: '|';
-            animation: blink 1s infinite;
-        }
-        
-        @keyframes blink {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0; }
-        }
-        
-        /* প্রোগ্রেস বার */
-        .progress-bar {
-            position: absolute;
-            top: 10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 4px;
-            background: rgba(255, 107, 129, 0.2);
-            border-radius: 5px;
-            z-index: 100;
-        }
-        
-        .progress {
-            height: 100%;
-            background: linear-gradient(90deg, #ff6b81, #ff8e53);
-            border-radius: 5px;
-            width: 0%;
-            transition: width 0.5s;
-        }
-        
-        /* শেষ পেজের কার্ড */
-        .birthday-card {
-            background: white;
-            border-radius: 20px;
-            padding: clamp(20px, 5vw, 30px);
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
-            transform: scale(0.9);
-            animation: cardPop 0.8s 0.5s forwards;
-            position: relative;
-            overflow: hidden;
-            margin: 0 auto;
-        }
-        
-        @keyframes cardPop {
-            0% { transform: scale(0.9); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
-        
-        .card-hearts {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 1;
-        }
-        
-        .heart {
-            position: absolute;
-            font-size: 20px;
-            color: #ff6b81;
-            animation: float 4s ease-in-out infinite;
-            opacity: 0;
-        }
-        
-        @keyframes float {
-            0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-            10% { opacity: 1; }
-            90% { opacity: 1; }
-            100% { transform: translateY(-100px) rotate(360deg); opacity: 0; }
-        }
-        
-        /* কনফেটি এফেক্ট */
-        .confetti {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            pointer-events: none;
-            z-index: 1000;
-            display: none;
-            overflow: hidden;
-        }
-        
-        .confetti-piece {
-            position: absolute;
-            width: 10px;
-            height: 10px;
-            background-color: #ff6b81;
-            border-radius: 50%;
-            animation: fall linear forwards;
-        }
-        
-        @keyframes fall {
-            to {
-                transform: translateY(100vh) rotate(360deg);
-                opacity: 0;
-            }
-        }
-        
-        /* ল্যান্ডস্কেপ মোডের জন্য স্টাইল */
-        @media (orientation: landscape) {
-            .message {
-                font-size: clamp(1rem, 2vh, 1.3rem);
-                margin: 10px 0;
-            }
-            
-            h1 {
-                font-size: clamp(1.8rem, 4vh, 2.5rem);
-                margin-bottom: 10px;
-            }
-            
-            .sticker {
-                width: clamp(80px, 20vh, 120px);
-                height: clamp(80px, 20vh, 120px);
-            }
-            
-            .btn-container {
-                bottom: 10px;
-            }
-        }
-        
-        /* খুব ছোট ডিভাইসের জন্য */
-        @media (max-width: 350px) {
-            .message {
-                font-size: 1rem;
-            }
-            
-            h1 {
-                font-size: 1.5rem;
-            }
-            
-            .nav-btn {
-                min-width: 100px;
-                padding: 8px 15px;
-            }
-        }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Dear Maydul Birthday</title>
+
+<!-- html2canvas CDN -->
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+
+<style>
+  /* ====== মূল স্টাইল - আগের ও কার্ডের মিলে ====== */
+  * {
+    margin: 0; padding: 0; box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  }
+  body {
+    overflow-x: hidden;
+    background-color: #ffe6f2;
+    color: #333;
+    text-align: center;
+  }
+  .page {
+    width: 100vw; height: 100vh;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    text-align: center;
+    opacity: 1;
+    transition: opacity 0.5s ease;
+  }
+  .page.hide {
+    opacity: 0;
+    pointer-events: none;
+  }
+  .bg-image {
+    position: absolute; width: 100%; height: 100%;
+    object-fit: cover; z-index: -1;
+    opacity: 0.1;
+  }
+  .content {
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 30px;
+    border-radius: 20px;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+    animation: fadeIn 1.5s ease;
+    border: 1px solid rgba(255,192,203,0.5);
+    position: relative;
+    z-index: 5;
+  }
+  h1 {
+    color: #d81b60;
+    margin-bottom: 20px;
+    font-size: clamp(1.8rem, 5vw, 2.5rem);
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+  }
+  p {
+    color: #333;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-size: clamp(1rem, 3vw, 1.2rem);
+    text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+  }
+  .btn {
+    padding: 15px 30px;
+    background: linear-gradient(45deg, #ff4081, #ff6b6b);
+    color: white;
+    border: none;
+    border-radius: 50px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 4px 15px rgba(255, 64, 129, 0.4);
+    margin-top: 15px;
+    animation: pulse 2s infinite;
+    font-weight: bold;
+    user-select: none;
+  }
+  .btn:hover,
+  .btn:focus {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 20px rgba(255, 64, 129, 0.6);
+    outline: none;
+  }
+  .btn:focus {
+    outline: 3px solid #ff4081;
+    outline-offset: 3px;
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
+  }
+  .confetti {
+    position: absolute;
+    width: 8px;
+    height: 8px;
+    background-color: red;
+    opacity: 0;
+    z-index: 4;
+    border-radius: 2px;
+    animation-fill-mode: forwards;
+  }
+  #page1 {
+    background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);
+  }
+  #page2 {
+    background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);
+    display: flex;
+    flex-direction: column;
+  }
+  #page3 {
+    background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
+    display: flex;
+    flex-direction: column;
+  }
+  .options {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+  }
+  .yes-btn {
+    background: linear-gradient(45deg, #4CAF50, #8BC34A);
+  }
+  .no-btn {
+    background: linear-gradient(45deg, #f44336, #ff5252);
+  }
+  #musicToggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 20;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 28px;
+    color: #d81b60;
+    user-select: none;
+    transition: color 0.3s ease;
+  }
+  #musicToggle:hover {
+    color: #ff6b6b;
+  }
+  .heart {
+    position: fixed;
+    right: 30px;
+    width: 25px;
+    height: 25px;
+    font-size: 25px;
+    color: #ff4081;
+    user-select: none;
+    pointer-events: none;
+    border-radius: 12px;
+    animation-timing-function: linear;
+    animation-iteration-count: infinite;
+    animation-name: roundedSquareMove;
+  }
+  @keyframes roundedSquareMove {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    20% {
+      transform: translate(-30px, 0) rotate(90deg);
+    }
+    40% {
+      transform: translate(-40px, 10px) rotate(135deg);
+    }
+    50% {
+      transform: translate(-40px, 30px) rotate(180deg);
+    }
+    70% {
+      transform: translate(-30px, 40px) rotate(270deg);
+    }
+    90% {
+      transform: translate(0, 40px) rotate(315deg);
+    }
+    100% {
+      transform: translate(0, 0) rotate(360deg);
+    }
+  }
+
+:root {
+    --gold: #D4AF37;
+    --deep-red: #8B0000;
+    --cream: #F5F5DC;
+    --dark: #222222;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Montserrat', sans-serif;
+    background-color: var(--dark);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    overflow: hidden;
+    color: var(--cream);
+}
+
+.card-container {
+    perspective: 1500px;
+    width: 400px;
+    height: 600px;
+}
+
+.card {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transition: transform 1s;
+    cursor: pointer;
+}
+
+.card:hover {
+    transform: rotateY(15deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
+}
+
+.card-front {
+    background: linear-gradient(135deg, var(--deep-red) 0%, #700000 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 30px;
+    box-sizing: border-box;
+    text-align: center;
+    color: var(--cream);
+    font-weight: 600;
+    position: relative;
+}
+
+.card-back {
+    background: var(--cream);
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--deep-red);
+    padding: 40px 30px;
+    box-sizing: border-box;
+    font-weight: 600;
+    position: relative;
+}
+
+.gold-border {
+    border: 2px solid var(--gold);
+    border-radius: 15px;
+    padding: 30px;
+    height: calc(100% - 60px);
+    width: calc(100% - 60px);
+    position: relative;
+    box-sizing: border-box;
+    background: rgba(0,0,0,0.15);
+    color: var(--cream);
+}
+
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--deep-red) 0%, #500000 100%);
+    transform-origin: top;
+    transform: rotateX(0deg);
+    transition: transform 0.8s ease-in-out;
+    z-index: 10;
+    border-radius: 20px 20px 0 0;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 30px;
+    box-sizing: border-box;
+    color: var(--gold);
+    font-family: 'Playfair Display', serif;
+    font-size: 2.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.card:hover .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+h1.card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.7rem;
+    color: var(--gold);
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.4);
+    margin-bottom: 20px;
+}
+
+p.card-text {
+    font-size: 1.1rem;
+    line-height: 1.7;
+    color: var(--cream);
+    margin-bottom: 25px;
+    font-weight: 400;
+}
+
+.signature {
+    font-family: 'Playfair Display', serif;
+    font-style: italic;
+    margin-top: 30px;
+    color: var(--gold);
+    font-size: 1.2rem;
+}
+
+/* Buttons */
+
+.btn, .btn-download {
+    margin-top: 15px;
+    padding: 14px 32px;
+    font-size: 1.1rem;
+    border-radius: 30px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    letter-spacing: 1.2px;
+    display: inline-block;
+    background: var(--gold);
+    color: var(--deep-red);
+    border: 2px solid var(--gold);
+    font-weight: 700;
+    user-select: none;
+}
+
+/* বাটন গুলোর মাঝে স্পেস */
+.btn + .btn, .btn-download + .btn-download, .btn + .btn-download, .btn-download + .btn {
+    margin-left: 15px;
+}
+
+.btn:hover, .btn-download:hover {
+    background: #b38f23;
+    color: #500000;
+}
+
+/* Confetti */
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: var(--gold);
+    opacity: 0;
+}
+
+/* Floating Animation */
+.floating {
+    animation: float 3s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-15px); }
+}
+
+/* Shine Effect */
+.shine {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        135deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.3) 50%,
+        rgba(255,255,255,0) 100%
+    );
+    animation: shine 3s infinite;
+    opacity: 0;
+}
+
+@keyframes shine {
+    0% { opacity: 0; left: -100%; }
+    20% { opacity: 0.5; }
+    100% { opacity: 0; left: 100%; }
+}
+
+/* কার্ড কনফেটি পতনের অ্যানিমেশন */
+@keyframes fall {
+  0% {
+    transform: translateY(-100px) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(600px) rotate(360deg);
+    opacity: 0;
+  }
+}
+</style>
 </head>
 <body>
-    <!-- প্রোগ্রেস বার -->
-    <div class="progress-bar">
-        <div class="progress" id="progress"></div>
+
+<!-- Music toggle & audio -->
+<button id="musicToggle" title="Toggle Background Music">🔈</button>
+<audio id="bgMusic" loop>
+  <source src="https://cdn.pixabay.com/download/audio/2022/04/20/audio_974a46d55c.mp3?filename=happy-birthday-90992.mp3" type="audio/mpeg" />
+</audio>
+
+<!-- Page 1 -->
+<div class="page" id="page1">
+  <img src="https://i.imgur.com/3ZQ9X9j.jpg" class="bg-image" alt="ফুলের ব্যাকগ্রাউন্ড" />
+  <div class="content">
+    <h1>Welcome Maydul ! 💖</h1>
+    <p>আজকের এই বিশেষ দিনে তোমাকে স্বাগতম আমার এই ছোট্ট ওয়েব জগতে...🤗</p>
+    <button class="btn" id="nextBtn1">পরের পেজে যাও</button>
+  </div>
+</div>
+
+<!-- Page 2 -->
+<div class="page" id="page2" style="display:none;">
+  <img src="https://i.imgur.com/5qY9b7J.jpg" class="bg-image" alt="কেকের ব্যাকগ্রাউন্ড" />
+  <div class="content">
+    <h1>প্রিয় Maydul! 🎀</h1>
+    <p>আজকে যে একটি বিশেষ দিন, তুমি কি জানো আজকে দিনটা বিশেষ কি জন্য ☺? যদি জানো, তাহলে তোমাকে মনে করিয়ে দিই 😊</p>
+    <p style="font-style: italic; color: #d81b60;">
+      এই দিনটার জন্য অনেকদিন ধরে অপেক্ষা করছিল তোমার একজন প্রিয় মানুষ...🤗🤩🥰
+    </p>
+    <button class="btn" id="nextBtn2">পরের পেজে যাও</button>
+  </div>
+</div>
+
+<!-- Page 3 -->
+<div class="page" id="page3" style="display:none;">
+  <img src="https://i.imgur.com/7QXZ3Lk.jpg" class="bg-image" alt="কনফেটির ব্যাকগ্রাউন্ড" />
+  <div class="content" style="position: relative;">
+    <h1>শুভ জন্মদিন! 🎂</h1>
+    <p>তোমার এই আনন্দময় দিনে তোমার প্রিয় একজন শুভাকাঙ্খি তোমাকে কিছু বলতে চায়...😎</p>
+    <p style="font-weight: bold; margin: 20px 0;">তুমি কি শুনতে ইচ্ছুক 😜?</p>
+    <div class="options">
+      <button class="btn yes-btn" id="yesBtn">হ্যাঁ 😁</button> 
+      <button class="btn no-btn" id="noBtn">না 😒</button>
     </div>
-    
-    <div class="page-container">
-        <!-- পেজ ১ -->
-        <div class="page active" style="background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);">
-            <img src="images/b1.gif" class="sticker" alt="বেলুন">
-            <h1>🎂🎉 শুভ জন্মদিন! 🎂🎉</h1>
-    <div class="message" id="msg1">
-         আলপনা, আজ তোমার জন্মদিন!<br>
-            জানো, এই দিনে তোমার মতো একজন অসাধারণ মানুষের আগমন হয়েছিল এই পৃথিবীতে,<br>
-           যে শুধু আপনজন নয়, আশেপাশের সকলের জীবনকেও আলোয় ভরিয়ে তোলে।<br>
-          জন্মদিনে তোমার জন্য রইল অপার ভালোবাসা আর অগণিত শুভকামনা। ❤🧡
+  </div>
+</div>
+
+<!-- Page 4 (Birthday message with Show Card button) -->
+<div class="page" id="page4" style="display:none; background: #fff; color: #222;">
+  <div class="content" style="max-width:none; max-width: 700px; margin: auto; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); background: #fff; padding: 30px;">
+    <h1 style="color:#d81b60;">শুভ জন্মদিন 💌</h1>
+    <p style="text-align: left; font-size: 1.1rem; line-height: 1.6;">
+      প্রিয় maydul,<br><br>
+      জন্মদিনের অনেক অনেক শুভেচ্ছা! তোমার এই বিশেষ দিনে আল্লাহ তোমাকে সুস্থ, সুখী ও সমৃদ্ধ রাখুন। 
+      জীবন যেন প্রতিটি মুহূর্তে নতুন আশা আর সম্ভাবনায় ভরে উঠে। তোমার সব স্বপ্ন পূরণ হোক 
+      এবং প্রতিটি পদক্ষেপে সাফল্য যেন তোমার সঙ্গী হয়।<br><br>
+      অনেক ভালোবাসা রইলো... ❤️<br><br>
+      <span style="font-weight:bold;">- Your senior</span>
+    </p>
+    <button class="btn" id="showCardBtn" style="background: linear-gradient(45deg, #2196F3, #03A9F4); margin-top: 20px;">Show Your Birthday Card</button>
+    <button class="btn" id="restartBtn" style="background: linear-gradient(45deg, #FF9800, #FFC107); margin-top: 15px;">আবার শুরু করুন</button>
+  </div>
+</div>
+
+<!-- Page 5: Birthday Card with download -->
+<div id="birthdayCardPage" class="page" style="display:none; background: var(--dark); color: var(--cream);">
+
+  <div class="card-container">
+    <div class="card" id="birthdayCard">
+      <div class="envelope-flap">Happy Birthday</div>
+      <div class="card-front gold-border">
+        <h1 class="card-title">শুভ জন্মদিন Maydul! 🎉</h1>
+        <p class="card-text">
+          তোমার এই বিশেষ দিনে<br />
+          জানালা থেকে ঝরছে রঙিন আলো
+          সারাজীবন থেকো তুমি সবসময় ভালো।..🥰<br></br>
+          শুভ কামনা ও ভালোবাসা! 💖
+        </p>
+        <button class="btn" id="celebrateBtn">Celebrate</button>
       </div>
-
-            <div class="btn-container">
-                <button class="nav-btn" onclick="nextPage()">শুরু করি</button>
-            </div>
-        </div>
-        
-        <!-- পেজ ২ -->
-        <div class="page" style="background: linear-gradient(135deg, #fdcbf1 0%, #e6dee9 100%);">
-            <img src="images/b2.gif" class="sticker" alt="হৃদয়">
-            <h1> তুমি জানো কি? 🤔</h1>
-        <div class="message" id="msg2">
-            তুমি জানো কি?<br>
-            তোমার একটি মাত্র হাসিই কারো সমস্ত ক্লান্তি দূর করে দিতে পারে।<br>
-            যে মুহূর্তে তুমি হাসো, সে মুহূর্তটাই হয়ে ওঠে পৃথিবীর সবচেয়ে উজ্জ্বল সময়।<br>
-            সেই হাসিটাই হলো তোমার আসল জাদু! 😜
-        </div>
-
-            <div class="btn-container">
-                <button class="nav-btn" onclick="prevPage()">পিছনে</button>
-                <button class="nav-btn" onclick="nextPage()">পরবর্তী</button>
-            </div>
-        </div>
-        
-        <!-- পেজ ৩ -->
-        <div class="page" style="background: linear-gradient(135deg, #a1c4fd 0%, #c2e9fb 100%);">
-            <img src="images/b3.gif" class="sticker" alt="তারকা">
-            <h1>✨ তোমার আলো 👻</h1>
-    <div class="message" id="msg3">
-        তুমি আলোর মতো।<br>
-        তুমি হয়তো বুঝতেও পারো না, কিন্তু তোমার উপস্থিতি কারো অন্ধকার জীবনে নতুন ভোর এনে দেয়।<br>
-        তোমার শান্ত কণ্ঠস্বর, কোমল মন আর স্নিগ্ধ আচরণ আশেপাশের সবাইকে ভালো থাকতে শেখায়। 😃
+      <div class="card-back gold-border">
+        <p style="font-size:1.2rem; font-weight:bold; margin-bottom: 30px;">
+          Have a wonderful day filled with joy and laughter!
+        </p>
+        <p class="signature">- আপনার প্রিয় একজন সুভাকাঙ্খি Shajjad</p>
+      </div>
     </div>
+  </div>
+  <button class="btn btn-download" id="downloadCardBtn" style="margin-top: 30px;">Download Your Card</button>
+  <button class="btn" id="backToMsgBtn" style="margin-top: 10px;">Back to Message</button>
+</div>
 
-            <div class="btn-container">
-                <button class="nav-btn" onclick="prevPage()">পিছনে</button>
-                <button class="nav-btn" onclick="nextPage()">পরবর্তী</button>
-            </div>
-        </div>
-        
-        <!-- পেজ ৪ -->
-        <div class="page" style="background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%);">
-            <img src="images/b4.gif" class="sticker" alt="প্রজাপতি">
-            <h1>🌸 ছোট্ট কথা 🤗</h1>
-    <div class="message" id="msg4">
-        কখনো কখনো জীবনের সবচেয়ে বড় পরিবর্তন আসে একটুখানি কথায়।<br>
-        আর তোমার বলা ছোট্ট কিছু শব্দ বহু মানুষের হৃদয় ছুঁয়ে যায়।<br>
-        তুমি হয়তো জানো না, কিন্তু তোমার কথা অনেকের হৃদয়ের গহীনে বাজে।
-        একদম শুরেলা বাঁশির মতো!😩
-    </div>
+<script>
+  // Page handling
+  const pages = ['page1', 'page2', 'page3', 'page4', 'birthdayCardPage'];
+  let currentPageIndex = 0;
 
-            <div class="btn-container">
-                <button class="nav-btn" onclick="prevPage()">পিছনে</button>
-                <button class="nav-btn" onclick="nextPage()">পরবর্তী</button>
-            </div>
-        </div>
-        
-        <!-- পেজ ৫ -->
-        <div class="page" style="background: linear-gradient(135deg, #ffc3a0 0%, #ffafbd 100%);">
-            <img src="images/b5.gif" class="sticker" alt="ফুল">
-            <h1>🌼 বিশেষ মানুষ 😚</h1>
-    <div class="message" id="msg5">
-        তুমি শুধু একটি নাম নও, তুমি একটি অনুভব।<br>
-    অনেকের জীবনে তুমি একজন 'বিশেষ মানুষ', যাকে ছাড়া দিনের শেষটা অসম্পূর্ণ থেকে যায়।<br>
-        তোমার অস্তিত্বই অনেকের জীবনের সবচেয়ে মূল্যবান সম্পদ। 🥰
-    </div>
+  function showPage(index) {
+    pages.forEach((pageId, i) => {
+      const el = document.getElementById(pageId);
+      if(i === index){
+        el.style.display = 'flex';
+      } else {
+        el.style.display = 'none';
+      }
+    });
+    currentPageIndex = index;
+  }
 
-            <div class="btn-container">
-                <button class="nav-btn" onclick="prevPage()">পিছনে</button>
-                <button class="nav-btn" onclick="nextPage()">পরবর্তী</button>
-            </div>
-        </div>
-        
-        <!-- পেজ ৬ -->
-        <div class="page" style="background: linear-gradient(135deg, #a18cd1 0%, #fbc2eb 100%);">
-            <img src="images/b6.gif" class="sticker" alt="জাদু">
-            <h1>💫 আশ্চর্য হও</h1>
-    <div class="message" id="msg6">
-        তুমি জানো না, ভবিষ্যতে তোমার জন্য কত অসাধারণ জিনিস অপেক্ষা করছে।<br>
-        জীবন তোমাকে এমন এমন চমক দেখাবে, যেগুলোর কল্পনাও তুমি এখন করতে পারো না।<br>
-        শুধু বিশ্বাস রাখো – ভালো কিছু তোমার দিকেই আসছে!
-    </div>
+  // Next buttons on pages 1 and 2
+  document.getElementById('nextBtn1').addEventListener('click', () => showPage(1));
+  document.getElementById('nextBtn2').addEventListener('click', () => showPage(2));
 
-            <div class="btn-container">
-                <button class="nav-btn" onclick="prevPage()">পিছনে</button>
-                <button class="nav-btn" onclick="nextPage()">পরবর্তী</button>
-            </div>
-        </div>
-        
-        <!-- পেজ ৭ -->
-        <div class="page" style="background: linear-gradient(135deg, #ff9a9e 0%, #fad0c4 100%);">
-            <img src="images/b7.gif" class="sticker" alt="উড়ন্ত হৃদয়">
-            <h1>💖 ভালোবাসা</h1>
-    <div class="message" id="msg7">
-        তুমি অনেক বেশি ভালোবাসার যোগ্য।<br>
-        তুমি যেভাবে অন্যকে ভালোবাসো, সম্মান দাও — ঠিক সেভাবেই তুমি পেয়েছো অনেকের অজানা ভালোবাসা।<br>
-        তুমি হয়তো বুঝতে পারো না, কিন্তু অনেকের হৃদয়ে তুমি অমূল্য জায়গা নিয়ে আছো।
-    </div>
+  // Yes/No buttons on page 3
+  document.getElementById('yesBtn').addEventListener('click', () => showPage(3));
+  document.getElementById('noBtn').addEventListener('click', () => {
+    alert('আবার চেষ্টা করুন, জন্মদিনের শুভেচ্ছা নেয়ার জন্য 😉');
+  });
 
-            <div class="btn-container">
-                <button class="nav-btn" onclick="prevPage()">পিছনে</button>
-                <button class="nav-btn" onclick="nextPage()">পরবর্তী</button>
-            </div>
-        </div>
-        
-        <!-- পেজ ৮ (স্পেশাল কার্ড) -->
-        <div class="page" style="background: linear-gradient(135deg, #ff7676 0%, #f54ea2 100%);">
-            <div class="birthday-card">
-                <div class="card-hearts" id="cardHearts"></div>
-                <img src="images/b8.gif" class="sticker" alt="কেক">
-                <h1 style="font-size: clamp(2rem, 6vw, 3rem);">💝 আলপনা 💝</h1>
-    <div class="message" id="msg8" style="font-size: clamp(1rem, 3vw, 1.3rem);">
-        <p>শুভ জন্মদিন আমার সবচেয়ে প্রিয় একজন মানুষ! </p>
-        <p>তুমি আমার জীবনে আসা একজন সুন্দর মনের মানুষ ।</p>
-        <p>তোমার পথ হোক রঙিন ফুলে ভরা,</p>
-        <p>তোমার দিন হোক আনন্দে মাখানো,</p>
-        <p>আর তোমার জীবন হোক ভালোবাসায় ভরপুর।</p>
-        <p>তোমাকে হাসিতে সুন্দর মানায় ,</p>
-        <p>তোমার মুখে হাসি থাকুক চিরকাল!🧡🥰</p>
-    </div>
+  // Restart button on page 4
+  document.getElementById('restartBtn').addEventListener('click', () => showPage(0));
 
-                <button class="nav-btn" onclick="startConfetti()" style="margin-top: 15px;">সেলিব্রেট করুন!</button>
-            </div>
-            <div class="btn-container">
-                <button class="nav-btn" onclick="prevPage()">পিছনে</button>
-                <button class="nav-btn" onclick="replay()">আবার দেখুন</button>
-            </div>
-        </div>
-    </div>
-    
-    <!-- কনফেটি এফেক্ট -->
-    <div class="confetti" id="confetti"></div>
+  // Show card button
+  document.getElementById('showCardBtn').addEventListener('click', () => {
+    showPage(4);
+  });
 
-    <script>
-        // পেজ ম্যানেজমেন্ট
-        let currentPage = 1;
-        const totalPages = 8;
-        const pages = document.querySelectorAll('.page');
-        const progress = document.getElementById('progress');
-        
-        // প্রোগ্রেস বার আপডেট
-        function updateProgress() {
-            progress.style.width = `${((currentPage-1) / (totalPages-1)) * 100}%`;
+  // Back to message button on card page
+  document.getElementById('backToMsgBtn').addEventListener('click', () => {
+    showPage(3);
+  });
+
+  // Card flipping & confetti
+  document.addEventListener('DOMContentLoaded', () => {
+    const card = document.querySelector('.card');
+    const celebrateBtn = document.getElementById('celebrateBtn');
+    const cardFront = document.querySelector('.card-front');
+
+    celebrateBtn.addEventListener('click', () => {
+      createConfetti();
+      card.style.transform = 'rotateY(180deg)';
+      celebrateBtn.textContent = 'Cheers!';
+      celebrateBtn.style.backgroundColor = 'var(--gold)';
+      celebrateBtn.style.color = 'var(--deep-red)';
+      setTimeout(() => {
+        celebrateBtn.textContent = 'Celebrate';
+        celebrateBtn.style.backgroundColor = 'var(--gold)';
+        celebrateBtn.style.color = 'var(--deep-red)';
+        card.style.transform = 'rotateY(0deg)';
+      }, 2000);
+    });
+
+    function createConfetti() {
+      for (let i = 0; i < 100; i++) {
+        const confetti = document.createElement('div');
+        confetti.className = 'confetti';
+
+        const colors = ['#D4AF37', '#FFD700', '#FFFFFF', '#8B0000'];
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        const size = Math.random() * 10 + 5;
+        confetti.style.width = `${size}px`;
+        confetti.style.height = `${size}px`;
+        confetti.style.backgroundColor = color;
+        confetti.style.position = 'absolute';
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.top = '-10px';
+        confetti.style.opacity = '1';
+
+        const shapes = ['square', 'circle', 'triangle'];
+        const shape = shapes[Math.floor(Math.random() * shapes.length)];
+
+        if (shape === 'circle') {
+          confetti.style.borderRadius = '50%';
+        } else if (shape === 'triangle') {
+          confetti.style.width = '0';
+          confetti.style.height = '0';
+          confetti.style.backgroundColor = 'transparent';
+          confetti.style.borderLeft = `${size / 2}px solid transparent`;
+          confetti.style.borderRight = `${size / 2}px solid transparent`;
+          confetti.style.borderBottom = `${size}px solid ${color}`;
         }
-        
-        // পেজ শো ফাংশন
-        function showPage(pageNum) {
-            // সব পেজ হাইড
-            pages.forEach(page => {
-                page.classList.remove('active');
-            });
-            
-            // বর্তমান পেজ শো
-            pages[pageNum - 1].classList.add('active');
-            
-            // প্রোগ্রেস বার আপডেট
-            updateProgress();
-            
-            // টাইপিং এফেক্ট
-            if(pageNum !== 8) {
-                typeEffect(pageNum);
-            }
-            
-            // শেষ পেজে হার্ট এফেক্ট
-            if(pageNum === 8) {
-                createHearts();
-            }
-        }
-        
-        // টাইপিং এফেক্ট
-        function typeEffect(pageNum) {
-            const msg = document.getElementById(`msg${pageNum}`);
-            const text = msg.textContent;
-            msg.textContent = '';
-            msg.classList.add('typing');
-            
-            let i = 0;
-            function typing() {
-                if (i < text.length) {
-                    msg.textContent += text.charAt(i);
-                    i++;
-                    setTimeout(typing, 50);
-                } else {
-                    msg.classList.remove('typing');
-                }
-            }
-            
-            typing();
-        }
-        
-        // হার্ট এফেক্ট তৈরি
-        function createHearts() {
-            const container = document.getElementById('cardHearts');
-            container.innerHTML = '';
-            
-            for(let i=0; i<20; i++) {
-                const heart = document.createElement('div');
-                heart.classList.add('heart');
-                heart.innerHTML = '❤';
-                heart.style.left = `${Math.random() * 100}%`;
-                heart.style.top = `${Math.random() * 100}%`;
-                heart.style.animationDelay = `${Math.random() * 2}s`;
-                container.appendChild(heart);
-            }
-        }
-        
-        // কনফেটি এফেক্ট
-        function startConfetti() {
-            const confetti = document.getElementById('confetti');
-            confetti.style.display = 'block';
-            confetti.innerHTML = '';
-            
-            // কনফেটি তৈরি
-            for(let i=0; i<100; i++) {
-                const piece = document.createElement('div');
-                piece.classList.add('confetti-piece');
-                piece.style.left = `${Math.random() * 100}%`;
-                piece.style.backgroundColor = getRandomColor();
-                piece.style.animationDuration = `${Math.random() * 3 + 2}s`;
-                confetti.appendChild(piece);
-            }
-            
-            // 5 সেকেন্ড পর কনফেটি হাইড
-            setTimeout(() => {
-                confetti.style.display = 'none';
-            }, 5000);
-        }
-        
-        function getRandomColor() {
-            const colors = ['#ff6b81', '#ff8e53', '#ffcc5c', '#88d8b0', '#96ceb4', '#ffeead', '#ff6f69'];
-            return colors[Math.floor(Math.random() * colors.length)];
-        }
-        
-        // পরবর্তী পেজ
-        function nextPage() {
-            if (currentPage < totalPages) {
-                currentPage++;
-                showPage(currentPage);
-            }
-        }
-        
-        // পূর্ববর্তী পেজ
-        function prevPage() {
-            if (currentPage > 1) {
-                currentPage--;
-                showPage(currentPage);
-            }
-        }
-        
-        // রিপ্লে ফাংশন
-        function replay() {
-            currentPage = 1;
-            showPage(currentPage);
-        }
-        
-        // টাচ ইভেন্ট (মোবাইলের জন্য)
-        let touchStartX = 0;
-        let touchEndX = 0;
-        
-        document.addEventListener('touchstart', e => {
-            touchStartX = e.changedTouches[0].screenX;
-        }, {passive: true});
-        
-        document.addEventListener('touchend', e => {
-            touchEndX = e.changedTouches[0].screenX;
-            handleSwipe();
-        }, {passive: true});
-        
-        function handleSwipe() {
-            if (touchEndX < touchStartX - 50) nextPage();
-            if (touchEndX > touchStartX + 50) prevPage();
-        }
-        
-        // প্রথম পেজ লোড হওয়ার সময় টাইপিং শুরু
-        window.onload = function() {
-            showPage(1);
-            
-            // iOS ডিভাইসের জন্য ফিক্স
-            document.addEventListener('touchmove', function(e) {
-                if (e.scale !== 1) { e.preventDefault(); }
-            }, { passive: false });
-        };
-        
-        // স্ক্রিন রিসাইজ হলে পেজ সাইজ ঠিক করা
-        window.addEventListener('resize', function() {
-            showPage(currentPage);
-        });
-    </script>
+
+        cardFront.appendChild(confetti);
+
+        const animationDuration = Math.random() * 3 + 2;
+        confetti.style.animation = `fall ${animationDuration}s linear forwards`;
+
+        setTimeout(() => {
+          confetti.remove();
+        }, animationDuration * 1000);
+      }
+    }
+
+    // Download button
+    document.getElementById('downloadCardBtn').addEventListener('click', () => {
+      const cardElement = document.getElementById('birthdayCard');
+      html2canvas(cardElement).then(canvas => {
+        const link = document.createElement('a');
+        link.download = 'birthday_card.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      });
+    });
+  });
+
+  // Background music toggle
+  const musicToggle = document.getElementById('musicToggle');
+  const bgMusic = document.getElementById('bgMusic');
+  let musicPlaying = false;
+
+  musicToggle.addEventListener('click', () => {
+    if (!musicPlaying) {
+      bgMusic.play();
+      musicToggle.textContent = '🔊';
+      musicPlaying = true;
+    } else {
+      bgMusic.pause();
+      musicToggle.textContent = '🔈';
+      musicPlaying = false;
+    }
+  });
+</script>
 </body>
 </html>
